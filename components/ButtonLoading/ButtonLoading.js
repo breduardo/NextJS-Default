@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Spinner } from "react-bootstrap";
 
 const ButtonLoading = (props) => {
-  const { onClick, name, loading, ...settings } = props;
+  const { onClick, name, loading, loadingText, ...settings } = props;
 
   return (
     <Button disabled={loading} onClick={onClick} {...settings}>
@@ -12,9 +12,17 @@ const ButtonLoading = (props) => {
         <Spinner component="span" size="sm" aria-hidden="true" />
       ) : null}
       {"\u00A0"}
-      {settings.children}
+      {loading && loadingText}
+      {!loading && settings.children}
     </Button>
   );
+};
+
+ButtonLoading.propTypes = {
+  onClick: PropTypes.func,
+  name: PropTypes.string,
+  loading: PropTypes.bool,
+  loadingText: PropTypes.string,
 };
 
 export default React.memo(ButtonLoading);

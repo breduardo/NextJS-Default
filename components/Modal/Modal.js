@@ -9,7 +9,6 @@ const ModalCustom = (props) => {
 
   // console.log(React.findDOMNode("buttonLoading").modalBody.find())
   // console.log(ReactDOM.findDOMNode(<ButtonLoading/>))
-  console.log(settings);
   return (
     <Modal
       show={settings.visible}

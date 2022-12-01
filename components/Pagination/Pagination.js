@@ -79,6 +79,8 @@ const Pagination = (props) => {
   if (query["page"]) {
     queryNextPage = { ...query, page: currentPage + 1 };
     queryPreviousPage = { ...query, page: currentPage - 1 };
+
+    if (queryPreviousPage.page <= 0) queryPreviousPage.page = 1;
   }
   queryNextPage = new URLSearchParams(queryNextPage).toString();
   queryPreviousPage = new URLSearchParams(queryPreviousPage).toString();

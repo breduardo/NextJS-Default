@@ -11,7 +11,7 @@ const DefaultLayout = (props) => {
     "/cadastrar",
     "/minha-conta/completarCadastro",
     "/login/esqueciMinhaSenha",
-    "/contato",
+    "/auth/signin",
   ].includes(router.pathname)
     ? false
     : true;
@@ -25,7 +25,7 @@ const DefaultLayout = (props) => {
           {/* <AppContent /> */}
           {children}
         </div>
-        <Footer />
+        {showHeader && <Footer />}
       </div>
     </div>
   );

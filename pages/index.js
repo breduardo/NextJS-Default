@@ -7,6 +7,9 @@ import styles from "../styles/Home.module.css";
 
 import { Header } from "components/Layout";
 import { Footer } from "../components/Layout";
+import Link from "next/link";
+import { getSession, useSession } from "next-auth/react";
+import Alert from "components/Alert";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +24,13 @@ export default function Home() {
     }, 1000);
   };
 
+  const user = useSession();
+
+  const { data } = user;
+
+  // if (user.status === "loading") {
+  //   return "Loading or not authenticated...";
+  // }
   return (
     <>
       <Modal
@@ -40,22 +50,49 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <Container>
-          <Stack direction="horizontal" gap={3}>
-            <ButtonLoading loading={loading} onClick={handleClick}>
-              Button loading
-            </ButtonLoading>
-            <Button onClick={() => setShowModal(true)}>Modal</Button>
+        <Container className="mt-3">
+          <Row>
+            <Col xs={12}>
+              <Stack direction="horizontal" gap={3}>
+                <ButtonLoading
+                  loading={loading}
+                  loadingText="Carregando"
+                  onClick={handleClick}
+                >
+                  Button loading
+                </ButtonLoading>
+                <Button onClick={() => setShowModal(true)}>Modal</Button>
 
-            <Pagination
-              totalRecords={100}
-              pageLimit={5}
-              page={page}
-              onChangePage={(e) => setPage(e)}
-            />
-          </Stack>
+                <Pagination
+                  totalRecords={100}
+                  pageLimit={5}
+                  page={page}
+                  onChangePage={(e) => setPage(e)}
+                />
+              </Stack>
+            </Col>
+            <Col md={6} lg={3}>
+              <Alert
+                status={"success"}
+                message="Teste"
+                buttonText="Button Text"
+                link="https://google.com.br"
+              />
+            </Col>
+          </Row>
         </Container>
       </div>
     </>
   );
 }
+
+// export async function getServerSideProps(ctx) {
+//   const session = await getSession(ctx);
+
+//   console.log({ session });
+//   return {
+//     props: {
+//       session,
+//     },
+//   };
+// }

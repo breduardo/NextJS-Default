@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import DefaultLayout from "../components/DefaultLayout";
 import App from "next/app";
+import { getSession, SessionProvider } from "next-auth/react";
+
 // import { AuthProvider, ProtectRoute, TokenExpirado } from "context/Auth";
 
 // add bootstrap css
@@ -20,17 +22,39 @@ import axios from "axios";
 const { publicRuntimeConfig } = getConfig();
 
 import { useRouter } from "next/router";
-function MyApp({ Component, pageProps, data = {} }) {
+import { SSRProvider } from "react-bootstrap";
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const MINUTE_MS = 6000;
 
+  const getLayout = Component.getLayout || ((page) => page);
   return (
     // <AppContext.Provider value={{ user, setUser, actions }}>
 
     // <AuthProvider>
-    <DefaultLayout>
-      <Component {...pageProps} {...data} />
-    </DefaultLayout>
+    <SessionProvider session={session}>
+      <SSRProvider>
+        {getLayout(
+          <DefaultLayout {...pageProps}>
+            <Component {...pageProps} />
+          </DefaultLayout>
+        )}
+      </SSRProvider>
+    </SessionProvider>
   );
 }
+
+MyApp.getInitialProps = async (ctx) => {
+  const appProps = await App.getInitialProps(ctx);
+  const session = await getSession(ctx);
+
+  console.log({ session });
+
+  return { pageProps: { ...appProps, session } };
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
 export default MyApp;
