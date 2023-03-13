@@ -25,36 +25,14 @@ const ModalCustom = (props) => {
       <Modal.Body style={{ overflowY: "auto" }}>
         {settings.modalBody}
         {settings.mensagemRetorno ? (
-          <CCol md={12}>
-            {/* <CAlert
-            visible={settings.mensagemRetorno.color ? true : false}
-            color={
-              !settings.mensagemRetorno.color
-                ? "info"
-                : settings.mensagemRetorno.color
-            }
-          >
-            {settings.mensagemRetorno.messageResponse}
-          </CAlert> */}
-
-            {settings.mensagemRetorno.messageResponse && (
-              <CCallout
-                color={
-                  !settings.mensagemRetorno.color
-                    ? "info"
-                    : settings.mensagemRetorno.color
-                }
-                style={{ borderTop: 0, borderRight: 0, borderBottom: 0 }}
-                className={`alert alert-${
-                  !settings.mensagemRetorno.color
-                    ? "info"
-                    : settings.mensagemRetorno.color
-                }`}
-              >
-                {settings.mensagemRetorno.messageResponse}
-              </CCallout>
+          <Col md={12} className="p-0 mt-3">
+            {settings.mensagemRetorno.message && (
+              <Alert
+                status={settings.mensagemRetorno.type}
+                message={settings.mensagemRetorno.message}
+              />
             )}
-          </CCol>
+          </Col>
         ) : null}
       </Modal.Body>
 

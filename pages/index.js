@@ -86,13 +86,13 @@ export default function Home() {
   );
 }
 
-// export async function getServerSideProps(ctx) {
-//   const session = await getSession(ctx);
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
 
-//   console.log({ session });
-//   return {
-//     props: {
-//       session,
-//     },
-//   };
-// }
+  console.log({ session });
+  return {
+    props: {
+      session,
+    },
+  };
+}

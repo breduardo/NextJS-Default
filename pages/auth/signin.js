@@ -1,3 +1,4 @@
+import Alert from "components/Alert";
 import {
   useSession,
   signIn,
@@ -7,7 +8,7 @@ import {
 } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, Col, Container, Form, FormText, Row } from "react-bootstrap";
 import { FaGoogle } from "react-icons/fa";
 // import Header from "../../components/header";
@@ -16,6 +17,20 @@ import styles from "styles/Signin.module.css";
 const Signin = ({ csrfToken, providers }) => {
   const user = useSession();
   const router = useRouter();
+  const [error, setError] = useState(false);
+  const [login, setLogin] = useState({});
+
+  const Login = async (e) => {
+    e.preventDefault();
+    const { ok, error, status, ...dados } = await signIn("login", {
+      email: login.email,
+      password: login.password,
+      redirect: false,
+    });
+
+    if (ok) router.push("/");
+    if (error) setError(error);
+  };
 
   useEffect(() => {
     if (user.status === "authenticated") {
@@ -32,7 +47,7 @@ const Signin = ({ csrfToken, providers }) => {
             style={{ backgroundColor: "white" }}
           >
             <div className="content">
-              <form id="login" className="form">
+              <form id="login" className="form" onSubmit={Login}>
                 <div className="row g-4">
                   <div className="col-lg-12">
                     <div className="text-center">
@@ -51,7 +66,10 @@ const Signin = ({ csrfToken, providers }) => {
                           className="form-control"
                           name="email"
                           placeholder="Ex: mail@mail.com"
-                          value="brunoed.0925@gmail.com"
+                          value={login?.email || ""}
+                          onChange={(e) => {
+                            setLogin({ ...login, email: e.target.value });
+                          }}
                         />
                       </div>
                       <div className="col-lg-12">
@@ -61,6 +79,10 @@ const Signin = ({ csrfToken, providers }) => {
                           className="form-control"
                           name="password"
                           placeholder="********"
+                          value={login?.password || ""}
+                          onChange={(e) => {
+                            setLogin({ ...login, password: e.target.value });
+                          }}
                         />
                       </div>
                     </div>
@@ -98,6 +120,10 @@ const Signin = ({ csrfToken, providers }) => {
                       ></ion-icon>
                     </button>
                   </div>
+
+                  <Col xs={12}>
+                    {error && <Alert status="danger" message={error} />}
+                  </Col>
                 </div>
               </form>
               <div className="social">

@@ -4,6 +4,9 @@ import FacebookProvider from "next-auth/providers/facebook";
 import GithubProvider from "next-auth/providers/github";
 import TwitterProvider from "next-auth/providers/twitter";
 import Auth0Provider from "next-auth/providers/auth0";
+import Credentials from "next-auth/providers/credentials";
+import { Teste } from "helpers/auth";
+import axios from "axios";
 // import AppleProvider from "next-auth/providers/apple"
 // import EmailProvider from "next-auth/providers/email"
 
@@ -37,6 +40,30 @@ export const authOptions = {
     //   clientId: process.env.GITHUB_ID,
     //   clientSecret: process.env.GITHUB_SECRET,
     // }),
+
+    Credentials({
+      id: "login",
+      async authorize(credentials) {
+        try {
+          const result = await axios
+            .post("http://localhost:9001/admin/sandbox/login", {
+              login: credentials.email,
+              senha: credentials.password,
+            })
+            .catch((err) => {
+              throw new Error(err.response.data.message);
+            });
+
+          return Promise.resolve(result.data);
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      },
+      credentials: {
+        username: { label: "Username", type: "text ", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
@@ -62,8 +89,12 @@ export const authOptions = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
+    credentials: async (user, acount, profile) => {
+      console.log({ user, acount, profile });
+      return Promise.resolve(true);
+    },
 
-    async jwt({ token }) {
+    async jwt({ token, ...t }) {
       token.userRole = "admin";
       return token;
     },
@@ -82,6 +113,7 @@ export const authOptions = {
     // That token store in session
     session: async ({ session, user, token }) => {
       // this token return above jwt()
+      console.log({ token });
       session.accessToken = token.accessToken;
       // window.localStorage.setItem("auth", true);
       return session;

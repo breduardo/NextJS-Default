@@ -47,7 +47,7 @@ MyApp.getInitialProps = async (ctx) => {
   const appProps = await App.getInitialProps(ctx);
   const session = await getSession(ctx);
 
-  console.log({ session });
+  // console.log({ session });
 
   return { pageProps: { ...appProps, session } };
   return {
